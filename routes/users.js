@@ -30,8 +30,32 @@ users.post("/", async (req, res) => {
 
 // get to my user account
 users.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password"); //exclude the password while sending
+  const user = await User.findById(req.user._id).select({ name: 1, email: 1 }); //exclude the password and isAdmin while sending
   res.send(user);
+});
+
+// get to my user account
+users.put("/me", auth, async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.message);
+
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      name: req.body.name, //only name can be updated
+    },
+    { new: true }
+  );
+
+  if (!user)
+    return res.status(404).send("The user with the given ID was not found!");
+
+  res.send(_.pick(user, ["_id", "name", "email"]));
+});
+
+users.delete("/me", auth, async (req, res) => {
+  await User.findByIdAndDelete(req.user._id);
+  res.send("Your Account Deleted Successfully!");
 });
 
 module.exports = users;
