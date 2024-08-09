@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
@@ -10,6 +11,8 @@ app.use(express.json());
 const books = require("./routes/books");
 const genres = require("./routes/genres");
 const authors = require("./routes/authors");
+const users = require("./routes/users");
+const auth = require("./routes/auth");
 
 app.get("/", (req, res) => {
   res.send("Welcome to the homepage of Libly api!");
@@ -18,6 +21,8 @@ app.get("/", (req, res) => {
 app.use("/api/books", books);
 app.use("/api/genres", genres);
 app.use("/api/authors", authors);
+app.use("/api/users", users);
+app.use("/api/auth", auth);
 
 mongoose
   .connect("mongodb://localhost/libly")

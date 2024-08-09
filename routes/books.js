@@ -4,6 +4,8 @@ const { validate, Book } = require("../models/book");
 const { Genre } = require("../models/genre");
 const { Author } = require("../models/author");
 const checkId = require("../middleware/checkId");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 books.get("/", async (req, res) => {
   const books = await Book.find().sort("published");
@@ -20,7 +22,7 @@ books.get("/:id", checkId, async (req, res) => {
 });
 
 // create a book
-books.post("/", async (req, res) => {
+books.post("/", [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -59,7 +61,7 @@ books.post("/", async (req, res) => {
 });
 
 // update a book
-books.put("/:id", checkId, async (req, res) => {
+books.put("/:id", [auth, admin, checkId], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -104,7 +106,7 @@ books.put("/:id", checkId, async (req, res) => {
 });
 
 // delete a book
-books.delete("/:id", checkId, async (req, res) => {
+books.delete("/:id", [auth, admin, checkId], async (req, res) => {
   const book = await Book.findByIdAndDelete(req.params.id);
 
   if (!book)

@@ -2,6 +2,8 @@ const express = require("express");
 const authors = express.Router();
 const { Author, validate } = require("../models/author");
 const checkId = require("../middleware/checkId");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 authors.get("/", async (req, res) => {
   const authors = await Author.find().sort("name");
@@ -18,7 +20,7 @@ authors.get("/:id", checkId, async (req, res) => {
 });
 
 // create a author
-authors.post("/", async (req, res) => {
+authors.post("/", [auth, admin], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -34,7 +36,7 @@ authors.post("/", async (req, res) => {
 });
 
 // update a author
-authors.put("/:id", checkId, async (req, res) => {
+authors.put("/:id", [auth, admin, checkId], async (req, res) => {
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.message);
 
@@ -56,7 +58,7 @@ authors.put("/:id", checkId, async (req, res) => {
 });
 
 // delete a author
-authors.delete("/:id", checkId, async (req, res) => {
+authors.delete("/:id", [auth, admin, checkId], async (req, res) => {
   const author = await Author.findByIdAndDelete(req.params.id);
 
   if (!author)
