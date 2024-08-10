@@ -8,7 +8,7 @@ const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
 books.get("/", async (req, res) => {
-  const books = await Book.find().sort("published");
+  const books = await Book.find();
   res.send(books);
 });
 

@@ -18,6 +18,8 @@ const authorSchema = new mongoose.Schema({
   },
 });
 
+authorSchema.index({ name: 'text' }); // Create a text index
+
 const Author = mongoose.model("Author", authorSchema);
 
 // validation logic using Joi
