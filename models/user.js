@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: { type: String, required: true },
   isAdmin: { type: Boolean, required: true },
+  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -27,6 +28,7 @@ const validateUser = (user) => {
     email: Joi.string().required().email(),
     password: passwordComplexity(),
     isAdmin: Joi.boolean().required(),
+    orders: Joi.objectId(),
   });
   return schema.validate(user);
 };

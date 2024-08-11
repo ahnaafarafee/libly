@@ -30,7 +30,11 @@ users.post("/", async (req, res) => {
 
 // get to my user account
 users.get("/me", auth, async (req, res) => {
-  const user = await User.findById(req.user._id).select({ name: 1, email: 1 }); //exclude the password and isAdmin while sending
+  const user = await User.findById(req.user._id).select({
+    name: 1,
+    email: 1,
+    orders: 1,
+  }); //exclude the password and isAdmin while sending
   res.send(user);
 });
 

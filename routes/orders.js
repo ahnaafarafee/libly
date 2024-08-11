@@ -12,10 +12,9 @@ const checkId = require("../middleware/checkId");
 // only admin can see all the orders made by any user
 //there maybe thousands of orders, so it's a good idea to paginate this
 orders.get("/", [auth, admin], async (req, res) => {
-  const { search, pageNum, pageSize } = req.query;
+  const { pageNum, pageSize } = req.query;
 
-  const regex = new RegExp(search, "i");
-  const orders = await Order.find({ title: { $regex: regex } })
+  const orders = await Order.find()
     .sort("-dateOrdered")
     .skip((pageNum - 1) * pageSize)
     .limit(pageSize);
@@ -43,7 +42,7 @@ orders.post("/", auth, async (req, res) => {
   if (book.numberInStock === 0)
     return res.status(400).send("This book is not in stock!");
 
-  const user = req.user;
+  let user = req.user;
 
   let order = new Order({
     user: {
@@ -56,10 +55,19 @@ orders.post("/", auth, async (req, res) => {
     },
   });
 
+  // await User.findByIdAndUpdate(user._id, {
+  //   orders: order,
+  // });
+
   try {
     const session = await mongoose.startSession();
     await session.withTransaction(async () => {
       const result = await order.save();
+
+      const updatedUser = await User.findById(user._id);
+      updatedUser.orders.push(result._id);
+      await updatedUser.save();
+
       book.numberInStock--;
       book.save();
       res.send(result);
