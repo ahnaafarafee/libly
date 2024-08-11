@@ -14,6 +14,7 @@ const authors = require("./routes/authors");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const search = require("./routes/search");
+const orders = require("./routes/orders");
 
 app.get("/", (req, res) => {
   res.send("Welcome to the homepage of Libly api!");
@@ -25,6 +26,7 @@ app.use("/api/authors", authors);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 app.use("/api/search", search);
+app.use("/api/orders", orders);
 
 mongoose
   .connect("mongodb://localhost/libly")
