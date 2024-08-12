@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 require("express-async-errors");
 require("dotenv").config();
 
+const winston = require("winston");
+require("winston-mongodb");
+const { combine, timestamp, printf } = winston.format;
+
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
@@ -18,6 +22,27 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const search = require("./routes/search");
 const orders = require("./routes/orders");
+
+// winston logger
+const logger = winston.createLogger({
+  level: "info",
+  format: combine(
+    timestamp(),
+    printf(
+      (info) =>
+        `time: ${info.timestamp}, logType: ${info.level}, message: ${info.message}`
+    )
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "logfile.log" }),
+    new winston.transports.MongoDB({
+      db: "mongodb://localhost/libly",
+      options: { useUnifiedTopology: true },
+    }),
+  ],
+});
+
 
 app.get("/", (req, res) => {
   res.send("Welcome to the homepage of Libly api!");
