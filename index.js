@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("express-async-errors");
 require("dotenv").config();
 
 const Joi = require("joi");
@@ -7,6 +8,8 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 const app = express();
 app.use(express.json());
+
+const error = require("./middleware/error");
 
 const books = require("./routes/books");
 const genres = require("./routes/genres");
@@ -27,6 +30,8 @@ app.use("/api/users", users);
 app.use("/api/auth", auth);
 app.use("/api/search", search);
 app.use("/api/orders", orders);
+
+app.use(error);
 
 mongoose
   .connect("mongodb://localhost/libly")

@@ -1,6 +1,8 @@
 # Libly
 ##### _An API for a local small bookshop. Built with Node.js, Express and MongoDB_
 
+## _From commit `0f6d85d` onwards, whole file system was changed for error handling feature and advanced coding practices. So for future references, copy the repo from commit `0f6d85d`_
+
 ### Core Features
 
 For a beginner, a basic bookstore API should focus on the core functionalities of managing books and users. Here's a breakdown:
