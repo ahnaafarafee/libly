@@ -1,3 +1,5 @@
+require("express-async-errors");
+
 const winston = require("winston");
 require("winston-mongodb");
 const { combine, timestamp, printf } = winston.format;
