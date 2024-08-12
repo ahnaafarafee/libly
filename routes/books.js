@@ -8,6 +8,7 @@ const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
 books.get("/", async (req, res) => {
+  throw new Error("Couldn't get the books");
   const books = await Book.find();
   res.send(books);
 });
