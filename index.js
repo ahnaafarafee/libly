@@ -5,6 +5,7 @@ require("./startup/routes")(app);
 require("dotenv").config();
 require("./startup/db")();
 const logger = require("./startup/logging");
+require("./startup/prod")(app);
 
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
