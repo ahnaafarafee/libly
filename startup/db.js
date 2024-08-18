@@ -3,6 +3,7 @@ const logger = require("../startup/logging");
 
 module.exports = function () {
   mongoose
-    .connect("mongodb://localhost/libly")
-    .then(() => logger.info("Successfully connected to MongoDB"));
+    .connect(process.env.CONNECTION_URL)
+    .then(() => logger.info("Successfully connected to MongoDB"))
+    .catch((err) => logger.error("Something Failed", err));
 };
